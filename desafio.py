@@ -5,6 +5,8 @@ menu = """
 [e] Extrato
 [q] Sair
 [r] Registar Usuario
+[c] Criar Conta Corrente
+[l] Listar Contas
 
 => """
 
@@ -14,49 +16,47 @@ extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
 Usuarios = []
-numero_usuario = []
-Id = 0
 Contas = []
+conta = 0
 
 # Registar usuario
 def registar():
     global Usuarios
-    global Id
-    global numero_usuario
     nome_usuario = str(input("Insira o nome: "))
     data_nascimento = str(input("Insira a data de nascimento do usuario: "))
-    cpf_usuario = str(input("Insira o CPF: "))
+    cpf_usuario = int(input("Insira o CPF: "))
     endereco = {}
     logradouro = str(input("Logradouro: "))
     bairro = input("Bairro: ")
     cidade = input("Cidade: ")
     estado = input("Estado: ")
     endereco.update({'Logradouro': logradouro, 'Bairro': bairro, 'Cidade': cidade, 'Estado': estado})
-    Usuarios.append({Id: {'Nome': nome_usuario, 'Data de nascimento': data_nascimento, 'CPF': cpf_usuario, 'Endereco': endereco}})
-    numero_usuario.append(Id)
-    Id += 1
+    Usuarios.append({'Nome': nome_usuario, 'Data de nascimento': data_nascimento, 'CPF': cpf_usuario, 'Endereco': endereco})
 
 # Criar conta corrente
-def criar_conta():
+def criar_conta(Usuarios,/):
     global Contas
-    global Usuarios
-    conta = 0
-    usuario = int(input("Insira Id do cliente: "))
-    conta += 1
-    nome_conta = f"Conta N{conta}"
-    Contas.append(conta)
-    for i in Usuarios:
-         for 
-
+    global conta
+    usuario = int(input("Insira CPF: "))
+    for i, v in enumerate(Usuarios):      
+        if usuario == Usuarios[i]['CPF']:
+            print("Conta vinculada com sucesso")
+            conta += 1
+            nome_conta = f"Conta N{conta}"
+            Contas.append({'Agencia': '0001', 'Conta': conta, 'CPF_Proprietario': Usuarios[i]['CPF']})
+                
+# Listar Contas
+def listar():
+    global Contas
+    for i in Contas:
+         print(F"{i}")
 
 # Saque
-def saque(valor):
-                global saldo
-                saldo -= valor
-                global extrato
-                extrato += f"Saque: R$ {valor:.2f}\n"
-                global numero_saquesj
-                numero_saques += 1
+def saque(valor, saldo, extrato):
+    saldo -= valor
+    extrato += f"Saque: R$ {valor:.2f}\n"
+    global numero_saques
+    numero_saques += 1
 
 # Deposito
 def deposito(valor):
@@ -103,7 +103,7 @@ while True:
         elif excedeu_saques:
             print("Operação falhou! Número máximo de saques excedido.")
         elif saldo > 0:
-             saque(valor= valor)
+             saque(valor)
 
         else:
             print("Operação falhou! O valor informado é inválido.")
@@ -117,6 +117,11 @@ while True:
 
     elif opcao == "r":
         registar()
+    
+    elif opcao == "c":
+        criar_conta(Usuarios)
+    elif opcao == "l":
+        listar()
 
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")
